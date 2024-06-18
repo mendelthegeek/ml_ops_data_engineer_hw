@@ -1,5 +1,9 @@
+import re
+from itertools import pairwise
+
 import numpy as np
 import pandas as pd
+
 
 def widen(df):
     wide = df.pivot_table(index='time', columns=["field", "robot_id"], values="value")
@@ -59,3 +63,16 @@ def calculate_features(df):
 
     calculated = wide.join(motion).join(vector_lengths)
     return calculated.bfill()
+
+
+def distance_traveled(wide):
+
+    position_columns_1 = list(filter(lambda s: re.match("[xyz]_1", s), wide.columns))
+    calculate = pairwise(wide[position_columns_1].dropna().values)
+    distance_1 = sum([np.linalg.norm(b - a) for a, b in calculate])
+
+    position_columns_2 = list(filter(lambda s: re.match("[xyz]_2", s), wide.columns))
+    calculate = pairwise(wide[position_columns_2].dropna().values)
+    distance_2 = sum([np.linalg.norm(b - a) for a, b in calculate])
+
+    return distance_1, distance_2
