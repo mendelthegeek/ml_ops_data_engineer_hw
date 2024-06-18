@@ -5,6 +5,14 @@ pd.set_option('display.max_columns', None)
 
 df = pd.read_parquet("./data/sample.parquet")
 
+wide = ETL.widen(df)
+motion = ETL.robot_motion(wide)
+vector_lengths = ETL.calculate_vectors(wide, motion, df["robot_id"].unique().tolist())
+
+wide.to_csv("./output/wide.csv")
+motion.to_csv("./output/motion.csv")
+vector_lengths.to_csv("./output/vector_lengths.csv")
+
 runtime_stats = pd.DataFrame(columns=[
     "uuid",
     "start",
@@ -30,3 +38,5 @@ for uuid, run in runs_by_uuid.items():
         distance_2,
         distance_1 + distance_2
     ]
+
+runtime_stats.to_csv("./output/runtime_stats.csv")
