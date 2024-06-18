@@ -70,7 +70,7 @@ def calculate_features(df):
     vector_lengths = calculate_vectors(wide, motion, df["robot_id"].unique().tolist())  # get absolute sizes
     # produce a single supertable
     calculated = wide.join(motion).join(vector_lengths)
-    return calculated.bfill()  # fills in remaining NaNs
+    return calculated.bfill().ffill()  # fills in remaining NaNs
 
 
 # calculates total distance traveled by each robot
