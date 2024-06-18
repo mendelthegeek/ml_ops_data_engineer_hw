@@ -4,7 +4,10 @@ import sys
 import pandas as pd
 import ETL
 
-mode = (sys.argv[1])
+if len(sys.argv) > 1:
+    mode = (sys.argv[1])
+else:
+    mode = ""
 
 pd.set_option('display.max_columns', None)
 # reads in data
